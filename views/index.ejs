@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="SafeWalk">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>SafeWalk</title>
+		<!-- Bootstrap CSS -->
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/static/css/style.css">
+		 <!-- Compiled and minified CSS -->
+  		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+ -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+   
+
+	</head>
+	<body ng-controller="MapController" data-ng-init="checkAuth()">
+		<nav class="navbar navbar-default navbar-fixed-top">
+	        <div class="container">
+	            <!-- Brand and toggle get grouped for better mobile display -->
+	            <div class="navbar-header page-scroll">
+	                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+	                    <span class="sr-only">Toggle navigation</span>
+	                    <span class="icon-bar"></span>
+	                    <span class="icon-bar"></span>
+	                    <span class="icon-bar"></span>
+	                </button>
+	                <a class="navbar-brand" href="#page-top">Safe Walk</a>
+	            </div>
+
+	            <!-- Collect the nav links, forms, and other content for toggling -->
+	            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	                <ul class="nav navbar-nav navbar-right">
+	                    <li class="hidden">
+	                        <a href=""></a>
+	                    </li>
+	                    <li class="page-scroll dropdown" ng-show="current_user == null">
+	                        <a href="" ng-click="showSignUp = true" class="dropdown-toggle" data-toggle="dropdown">Sign Up</a>
+	                        <div class="dropdown-menu myDropdown" style="padding:17px;" ng-show="showSignUp">
+				              <form id="formLogin" ng-submit="signUp()"> 
+				              	<div class="form-group">
+				              		<label>Username</label>
+				              		<input name="username" id="username" class="form-control" ng-model="newUser.username" type="text" placeholder="Username" required> 
+				              	</div>
+				              	<div class="form-group">
+				              		<label>email</label>
+				              		<input name="email" id="email" type="email" class="form-control" ng-model="newUser.email"  placeholder="email" required><br>
+				              	</div>
+				              	<div class="form-group">
+				              		<label>Password</label>
+				              		<input name="password" id="password" type="password" class="form-control" ng-model="newUser.password"  placeholder="Password" required><br>
+				              	</div>
+				              	<div class="form-group">
+				              		<label>Your Safe Location</label>
+				              		<google-places location=location></google-places><br>
+				              	</div>
+				              	<div class="form-group">
+				              		<label>Emergency number</label>
+				              		<input name="number" id="number" type="text" class="form-control" ng-model="newUser.number"  placeholder="eg +14155978653" required><br>
+				              	</div>
+				                <button type="submit" id="btnLogin" class="btn btn-dark btn-lg track" ng-click="showSignUp= false">Let's Go</button>
+				                 <button type="button" id="btnLogin" class="btn btn-dark btn-lg track" ng-click="showSignUp= false">Cancel</button>
+				              </form>
+				            </div>
+	                    </li>
+	                    <li ng-if="current_user !== null" class="page-scroll dropdown">
+	                    	<a href="" >{{current_user.username}}</a>
+	                    </li>
+	                    <li class="page-scroll dropdown" ng-show="current_user == null">
+	                        <a href="" ng-click="showMe = true" class="dropdown-toggle" data-toggle="dropdown">Login</a>
+	                        <div class="dropdown-menu myDropdown" style="padding:17px;" ng-show="showMe">
+				              <form id="formLogin" ng-submit="login()"> 
+				              	<div class="form-group">
+				              		<label>Email</label>
+				              		<input name="email" id="username" class="form-control" ng-model="user.email" type="email" placeholder="example@gmail.com" required> 
+				              	</div>
+				              	<div class="form-group">
+				              		<label>Password</label>
+				              		<input name="password" id="password" type="password" class="form-control" ng-model="user.password"  placeholder="Password" required><br>
+				              	</div>
+				                <button type="submit" id="btnLogin" class="btn btn-dark btn-lg track"  ng-click="showMe=false">Login</button>
+				                 <button type="button" id="btnLogin" class="btn btn-dark btn-lg track" ng-click="showMe= false">Cancel</button>
+				              </form>
+				            </div>
+	                    </li>
+	                    <li ng-if="current_user" class="page-scroll dropdown">
+	                    	  <a href="" ng-click="logout()" >Logout</a>
+	                    </li>
+	            
+	                </ul>
+	            </div>
+	            <!-- /.navbar-collapse -->
+	        </div>
+        <!-- /.container-fluid -->
+        </nav>
+        <header >
+	        <div class="container">	
+	    			<div class="row">
+	    			
+						<h1 class="text-center">SafeWalk</h1>
+						<h3 id='h3'>Tell them your are fine</h3>
+						<br>
+						<br>
+	    				<button class="btn btn-dark btn-lg track" ng-click="trackMe(); showMap= true">Track Me !</button>
+	    			</div>
+	    	</div>
+
+    	</header>
+   				<div ng-show="showMap">
+	   				<ui-gmap-google-map id="map-canvas" center='map.center' zoom='map.zoom' mapTypeId="map.mapTypeId" ng-model='map'>
+						<ui-gmap-markers models="map.marker" coords="'self'" icon="'icon'" title="'ffff you'" options="'options'">
+							<ui-gmap-windows show="show" options="'options'">
+		                		<p class="window-title" ng-non-bindable>{{title}}</p>
+		           			 </ui-gmap-windows>
+
+						</ui-gmap-markers>
+	    			</ui-gmap-google-map>
+   				</div>
+				
+    		
+			
+    		
+    	
+
+		<!-- Angular library -->
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js'></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+   		<!-- <script src="/static/lib/ngmap/build/scripts/ng-map.min.js"/> -->
+		<script type="text/javascript" src="/static/lib/angular-simple-logger.js"></script>
+   		<script src="/static/lib/angular-google-maps/dist/angular-google-maps.min.js"/>
+		<!-- jQuery -->
+		<!-- Bootstrap JavaScript -->
+
+		 <!-- Compiled and minified JavaScript -->
+  		<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>-->
+		<script type="text/javascript" src="/static/js/app.js"></script>
+		<script type="text/javascript" src="/static/js/MapController.js"></script>
+		<script type="text/javascript" src="/static/js/OtdDirectives.js"></script>
+		<script src="//code.jquery.com/jquery.js"></script>
+		<script src='//maps.googleapis.com/maps/api/js?libraries=places'></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</body>
+</html>
