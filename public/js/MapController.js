@@ -138,13 +138,13 @@ app.controller("MapController", ['$scope','$http', function($scope, $http) {
 		$http
 		.post("/login", $scope.user)
 		.then(function (response) {
-			if (response === "User doesn't exist") {
+			if (response.data === "User doesn't exist") {
 				alert("This user doesn't exist, try again");
 
-			}else if (response === "Incorrect Password") {
+			}else if (response.data === "Incorrect Password") {
 				alert("Incorrect Password, try again");
 
-			}else if ((response !== null) && (response !== "Incorrect Password") && (response !== "User doesn't exist")) {
+			}else if ((response !== null) && (response.data !== "Incorrect Password") && (response.data !== "User doesn't exist")) {
 				console.log("logging in with: ", response.data);
 				$scope.current_user= response.data;
 			}

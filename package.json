@@ -4,7 +4,7 @@
   "description": "telling relatives you are fine",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "ngGeolocation": ">=0.0.2",
     "ngmap": "^1.14.16",
     "nodemon": "^1.8.1",
-    "request": "^2.67.0"
+    "request": "^2.67.0",
+    "twilio": "^2.6.0"
   }
 }
