@@ -84,11 +84,12 @@ app.post("/users", function (req, res) {
 		if(error) {
 			console.log("error", error);
 		}
-		
+		else {
 			req.session.userId = newUser._id;
 			req.session.user = newUser;
 			console.log("yeaah success !!")
 			res.send(newUser);
+		}
 		
 		
 	});
@@ -98,15 +99,6 @@ app.get("/current_user", function (req, res) {
 	var user = req.session.user;
 	//console.log("the session is:", req.session.user);
 	res.json({user : req.session.user});
-});
-
-app.get("/logout", function (req, res) {
-
-});
-
-app.post("/login", function (req, res) {
-
-
 });
 
 

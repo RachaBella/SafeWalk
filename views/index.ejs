@@ -7,6 +7,7 @@
 		<!-- Bootstrap CSS -->
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="/static/css/style.css">
+		<link rel="SHORTCUT ICON" href="http://i.imgur.com/oyNa6WV.png"/>
 		 <!-- Compiled and minified CSS -->
   		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
  -->
@@ -38,7 +39,7 @@
 	                    <li class="page-scroll dropdown" ng-show="current_user == null">
 	                        <a href="" ng-click="showSignUp = true" class="dropdown-toggle" data-toggle="dropdown">Sign Up</a>
 	                        <div class="dropdown-menu myDropdown" style="padding:17px;" ng-show="showSignUp">
-				              <form id="formLogin" ng-submit="signUp()"> 
+				              <form id="formLogin" ng-submit="signUp()" data-toggle="validator"> 
 				              	<div class="form-group">
 				              		<label>Username</label>
 				              		<input name="username" id="username" class="form-control" ng-model="newUser.username" type="text" placeholder="Username" required> 
@@ -59,7 +60,7 @@
 				              		<label>Emergency number</label>
 				              		<input name="number" id="number" type="text" class="form-control" ng-model="newUser.number"  placeholder="eg +14155978653" required><br>
 				              	</div>
-				                <button type="submit" id="btnLogin" class="btn btn-dark btn-lg track" ng-click="showSignUp= false">Let's Go</button>
+				                <button type="submit" id="btnLogin" class="btn btn-dark btn-lg track">Let's Go</button>
 				                 <button type="button" id="btnLogin" class="btn btn-dark btn-lg track" ng-click="showSignUp= false">Cancel</button>
 				              </form>
 				            </div>
@@ -70,7 +71,7 @@
 	                    <li class="page-scroll dropdown" ng-show="current_user == null">
 	                        <a href="" ng-click="showMe = true" class="dropdown-toggle" data-toggle="dropdown">Login</a>
 	                        <div class="dropdown-menu myDropdown" style="padding:17px;" ng-show="showMe">
-				              <form id="formLogin" ng-submit="login()"> 
+				              <form id="formLogin" ng-submit="login()" data-toggle="validator"> 
 				              	<div class="form-group">
 				              		<label>Email</label>
 				              		<input name="email" id="username" class="form-control" ng-model="user.email" type="email" placeholder="example@gmail.com" required> 
@@ -79,13 +80,13 @@
 				              		<label>Password</label>
 				              		<input name="password" id="password" type="password" class="form-control" ng-model="user.password"  placeholder="Password" required><br>
 				              	</div>
-				                <button type="submit" id="btnLogin" class="btn btn-dark btn-lg track"  ng-click="showMe=false">Login</button>
+				                <button type="submit" id="btnLogin" class="btn btn-dark btn-lg track" >Login</button>
 				                 <button type="button" id="btnLogin" class="btn btn-dark btn-lg track" ng-click="showMe= false">Cancel</button>
 				              </form>
 				            </div>
 	                    </li>
 	                    <li ng-if="current_user" class="page-scroll dropdown">
-	                    	  <a href="" ng-click="logout()" >Logout</a>
+	                    	  <a href="" ng-click="logout(); showMap = false" >Logout</a>
 	                    </li>
 	            
 	                </ul>
@@ -97,20 +98,23 @@
         <header >
 	        <div class="container">	
 	    			<div class="row">
-	    			
-						<h1 class="text-center">SafeWalk</h1>
-						<h3 id='h3'>Tell them your are fine</h3>
-						<br>
-						<br>
-				
-	    				<button class="btn btn-dark btn-lg track" ng-show="current_user"  ng-click="trackMe(); showMap= true">Track Me !</button>
+	    				<div class="col-lg-12">
+	    					<h1 class="text-center">SafeWalk</h1>
+							<h3 id='h3'>Tell them your are fine</h3>
+							<br>
+							<br>
+					
+		    				<button class="btn btn-dark btn-lg track" ng-show="current_user"  ng-click="trackMe(); showMap= true">Track Me !</button>
+	    					
+	    				</div>
+						
 						
 	    			</div>
 	    	</div>
 
     	</header>
-   				<div ng-show="showMap">
-	   				<ui-gmap-google-map id="map-canvas" center='map.center' zoom='map.zoom' mapTypeId="map.mapTypeId" ng-model='map'>
+   				<div ng-if="showMap ==true" id="map-canvas" ng-hide="!showMap" >
+	   				<ui-gmap-google-map  id="map-canvas" center='map.center' zoom='map.zoom' mapTypeId="map.mapTypeId" ng-model='map'>
 						<ui-gmap-markers models="map.marker" coords="'self'" icon="'icon'" title="'ffff you'" options="'options'">
 							<ui-gmap-windows show="show" options="'options'">
 		                		<p class="window-title" ng-non-bindable>{{title}}</p>

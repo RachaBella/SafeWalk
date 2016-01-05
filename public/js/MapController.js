@@ -10,29 +10,21 @@ app.controller("MapController", ['$scope','$http', function($scope, $http) {
 	$scope.map = {};
 	$scope.user= {};
 
-	function success(pos) {
-		  var crd = pos.coords;
-		  // console.log('Your current position is:');
-		  // console.log('Latitude : ' + crd.latitude);
-		  // console.log('Longitude: ' + crd.longitude);
-		  // console.log('More or less ' + crd.accuracy + ' meters.');
-		  return $scope.map = { 
-				center: { 
-					latitude: crd.latitude, 
-					longitude: crd.longitude
-				}, 
-				zoom: 16,
-				mapTypeId: google.maps.MapTypeId.ROADMAP,
-				marker:[{
-			      id: "50651",
-			      latitude: crd.latitude,
-			      longitude: crd.longitude,
-			      title: "You are here",
-			      distance: "585m",
-			      hoofdcat: "70",
+	$scope.initialize = function () {
+		  if(navigator.geolocation) {
+		    var browserSupportFlag = true;
+		    navigator.geolocation.getCurrentPosition(function(position) {
+		    var initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+		    var myOptions = {
+		    zoom: 16,
+		    mapTypeId: google.maps.MapTypeId.ROADMAP,
+		  	};
+		  	var map2 = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+		  	var marker = new google.maps.Marker({
+			    position: initialLocation,
+			    map: map2,
+			    title: "You are here",
 			      img: "http://snm-crm.nl/wealert/img/70/ambu_6_thumb.jpg?2u",
-			      reactiecount: "0",
-			      likecount: "0",
 			      showWindow: true,
 			      date: "2u",
 			      options: {
@@ -41,47 +33,19 @@ app.controller("MapController", ['$scope','$http', function($scope, $http) {
 			        labelClass: "labelClass",
 			        animation: 1
 			      }
-    			}]
-			};
+			});
+		    map2.setCenter(initialLocation);
+		    $scope.map = map2;
+		    }, function() {
+		      handleNoGeolocation(browserSupportFlag);
+		    });
+		  }
+
 	}
 
-	function error(error) {
-		alert('Unable to get location, you should autorize the app to track you and to tell them you are fine' + error.message);
-	};
-
-	navigator.geolocation.getCurrentPosition(success, error);
-	
-	console.log($scope.map)	
-		
 	function refreshScope(lat, longi) {
-		$scope.map = { 
-			center: { 
-				latitude: lat, 
-				longitude: longi
-			}, 
-			zoom: 16,
-			mapTypeId: google.maps.MapTypeId.ROADMAP,
-			marker:[{
-		      id: "50651",
-		      latitude: lat,
-		      longitude: longi,
-		      title: "You are here",
-		      distance: "585m",
-		      hoofdcat: "70",
-		      img: "http://snm-crm.nl/wealert/img/70/ambu_6_thumb.jpg?2u",
-		      reactiecount: "0",
-		      likecount: "0",
-		      showWindow: true,
-		      date: "2u",
-		      options: {
-		        labelContent: "&nbsp;&nbsp;&nbsp;585m<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2u",
-		        labelAnchor: "0 0",
-		        labelClass: "labelClass",
-		        animation: 1
-		      }
-			}]
 		
-		};	
+		$scope.initialize();
 
 	}
 
@@ -98,7 +62,6 @@ app.controller("MapController", ['$scope','$http', function($scope, $http) {
         	.then(function (response) {
         		alert(response.data);
         		console.log("the watchID is", watchID);
-        		debugger;
         		navigator.geolocation.clearWatch(watchID);
         	});
         }
@@ -127,9 +90,13 @@ app.controller("MapController", ['$scope','$http', function($scope, $http) {
            alert("Sorry, browser does not support geolocation!");
         }
     }
+    	
 	
 	$scope.trackMe = function() {
 		console.log("clicked");
+		$scope.render = true;
+		$scope.initialize();
+		console.log($scope.map)	
 		getLocationUpdate();
 	};
 
@@ -166,7 +133,7 @@ app.controller("MapController", ['$scope','$http', function($scope, $http) {
 			alert('You should enter a safe location. Try again');
 			}
 			else {
-				console.log("the fucking location is",$scope.location);
+				console.log("the location is",$scope.location);
 				$scope.newUser.location = $scope.location
 				console.log($scope.newUser);
 				$http
@@ -178,15 +145,7 @@ app.controller("MapController", ['$scope','$http', function($scope, $http) {
 			    });
 			}
 	}
-  //  		google.maps.event.addListener(autocompleteFrom, 'place_changed', function() {
-	 //        var place = autocompleteFrom.getPlace();
-	 //        $scope.location = place.geometry.location.lat() + ',' + place.geometry.location.lng();
-  //           $scope.$apply();
-  //           console.log($scope.location)
-	        // $scope.user.fromLng = place.geometry.location.lng();
-	        // $scope.user.from = place.formatted_address;
-
-    	// });
+  
 	$scope.checkAuth = function () {
 		$http
 			.get("/current_user")

@@ -2,6 +2,12 @@ body {
     overflow-x: hidden;
 }
 
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
+     outline: 0;
+    color: #FFA500;
+}
+
 .navbar-default {
 	background-color: #2c3e50;
 	border-color: #2c3e50;
@@ -100,11 +106,34 @@ button .track:active{
     color:#ffffff;
 }
 
-@media only (max-device-width: 480px) {
+@media screen and (max-device-width: 480px) {
 	 header .container {
         padding-top: 200px;
         padding-bottom: 100%;
     }	
+     header h1 {
+        color: #FFA500;
+        display: block;
+        text-transform: uppercase;
+        font-family: "Century Gothic";
+        font-size: 4em;
+        font-weight: 600;
+        letter-spacing: 3px;
+    }
+
+    header h3{
+    color: white;
+    display: block;
+    font-family: "Century Gothic";
+    font-size: 25px;
+    }
+}
+
+@media (max-device-height: 800px){
+    header.container {
+        padding-top: 200px;
+        padding-bottom: 100%;
+    }
 }
 
 
@@ -158,4 +187,26 @@ button .track:active{
 @media(max-device-width: 480px) {
     .angular-google-map-container { height: 600px; }
 
+}
+
+.input-field input[type=search] {
+  display: block;
+  line-height: inherit;
+  padding-left: 4rem;
+  width: calc(100% - 4rem);
+}
+.input-field {
+  position: relative;
+  min-width: 300px;
+    overflow: hidden;
+  margin-top: 1rem;
+}
+.input-field input[type=search] ~ .mdi-navigation-close {
+  position: absolute;
+  top: 0;
+  right: 1rem;
+  color: transparent;
+  cursor: pointer;
+  font-size: 2rem;
+  transition: .3s color;
 }
